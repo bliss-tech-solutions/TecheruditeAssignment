@@ -24,17 +24,14 @@ const HomePageProductsGrid = () => {
     const [detailModalVisible, setDetailModalVisible] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 8;
+    const productsPerPage = 4;
 
-    // Fetch products on mount
     useEffect(() => {
         dispatch(fetchProducts());
     }, [dispatch]);
 
-    // Get unique categories from products
     const categories = useMemo(() => {
         const allCategories = products.flatMap(product => {
-            // Handle both string and array categoriesName
             if (Array.isArray(product.categoriesName)) {
                 return product.categoriesName;
             }
@@ -43,7 +40,6 @@ const HomePageProductsGrid = () => {
         return [...new Set(allCategories.filter(Boolean))];
     }, [products]);
 
-    // Toggle category selection
     const toggleCategory = (category) => {
         setSelectedCategories(prev => {
             if (prev.includes(category)) {
@@ -54,16 +50,13 @@ const HomePageProductsGrid = () => {
         });
     };
 
-    // Clear all filters
     const clearFilters = () => {
         setSelectedCategories([]);
         setSearchQuery("");
     };
 
-    // Filter products based on search and categories
     const filteredProducts = useMemo(() => {
         return products.filter(product => {
-            // Search filter
             if (searchQuery) {
                 const query = searchQuery.toLowerCase();
                 const titleMatch = product.productTitle?.toLowerCase().includes(query);
@@ -71,13 +64,11 @@ const HomePageProductsGrid = () => {
                 if (!titleMatch && !descMatch) return false;
             }
 
-            // Category filter (if any categories selected)
             if (selectedCategories.length > 0) {
                 const productCategories = Array.isArray(product.categoriesName) 
                     ? product.categoriesName 
                     : [product.categoriesName];
                 
-                // Check if product has any of the selected categories
                 const hasMatchingCategory = selectedCategories.some(cat => 
                     productCategories.includes(cat)
                 );
@@ -88,18 +79,15 @@ const HomePageProductsGrid = () => {
         });
     }, [products, searchQuery, selectedCategories]);
 
-    // Pagination calculations
     const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
     const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
-    // Reset to page 1 when filters change
     useEffect(() => {
         setCurrentPage(1);
     }, [searchQuery, selectedCategories]);
 
-    // Handle page change
     const handlePageChange = (page) => {
         setCurrentPage(page);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -142,7 +130,6 @@ const HomePageProductsGrid = () => {
             setDrawerVisible(false);
             setEditingProduct(null);
         } catch (error) {
-            // Handle both string errors and Error objects
             const errorMessage = typeof error === 'string' 
                 ? error 
                 : error?.message || 'Something went wrong. Please try again.';
@@ -152,7 +139,6 @@ const HomePageProductsGrid = () => {
 
     return (
         <div className="products-page">
-            {/* Header Section */}
             <div className="products-header">
                 <h1 className="products-title">Products</h1>
                 <div className="products-header-actions">
@@ -180,7 +166,6 @@ const HomePageProductsGrid = () => {
                 </div>
             </div>
 
-            {/* Categories Filter */}
             <div className="categories-filter">
                 <button
                     className={`category-btn ${selectedCategories.length === 0 ? 'active' : ''}`}
@@ -205,14 +190,12 @@ const HomePageProductsGrid = () => {
                 ))}
             </div>
 
-            {/* Products Count */}
             {!loading && filteredProducts.length > 0 && (
                 <div className="products-count">
                     Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} products
                 </div>
             )}
 
-            {/* Products Grid */}
             {loading ? (
                 <div className="loading-container">
                     <Spin size="large" />
@@ -271,7 +254,6 @@ const HomePageProductsGrid = () => {
                 </>
             )}
 
-            {/* Pagination */}
             {!loading && filteredProducts.length > productsPerPage && (
                 <div className="pagination-container">
                     <button 
@@ -287,12 +269,10 @@ const HomePageProductsGrid = () => {
                     
                     <div className="pagination-numbers">
                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                            // Show first page, last page, current page, and pages around current
                             const showPage = page === 1 || 
                                            page === totalPages || 
                                            Math.abs(page - currentPage) <= 1;
                             
-                            // Show ellipsis
                             if (!showPage) {
                                 if (page === 2 && currentPage > 3) {
                                     return <span key={page} className="pagination-ellipsis">...</span>;
@@ -328,7 +308,6 @@ const HomePageProductsGrid = () => {
                 </div>
             )}
 
-            {/* Product Form Drawer */}
             <Drawer
                 title={editingProduct ? "Edit Product" : "Add New Product"}
                 placement="right"
@@ -351,7 +330,6 @@ const HomePageProductsGrid = () => {
                 />
             </Drawer>
 
-            {/* Product Detail Modal */}
             <ProductDetailModal
                 product={selectedProduct}
                 visible={detailModalVisible}

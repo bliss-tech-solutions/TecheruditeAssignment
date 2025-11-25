@@ -64,7 +64,6 @@ const ProductDetailModal = ({ product, visible, onClose }) => {
             destroyOnClose
         >
             <div className="modal-content">
-                {/* Left Side - Images */}
                 <div className="modal-images-section">
                     <div className="main-image-container">
                         <img 
@@ -89,7 +88,6 @@ const ProductDetailModal = ({ product, visible, onClose }) => {
                     )}
                 </div>
 
-                {/* Right Side - Product Info */}
                 <div className="modal-info-section">
                     <div className="product-header">
                         <div className="category-tags">

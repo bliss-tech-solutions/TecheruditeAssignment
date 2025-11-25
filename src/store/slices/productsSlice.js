@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { productsAPI } from '../../services/api';
 
-// Async thunks
 export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async (_, { rejectWithValue }) => {
@@ -91,7 +90,6 @@ const productsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        // Fetch all products
         builder
             .addCase(fetchProducts.pending, (state) => {
                 state.loading = true;
@@ -106,7 +104,6 @@ const productsSlice = createSlice({
                 state.error = action.payload;
             });
 
-        // Fetch product by ID
         builder
             .addCase(fetchProductById.pending, (state) => {
                 state.loading = true;
@@ -121,7 +118,6 @@ const productsSlice = createSlice({
                 state.error = action.payload;
             });
 
-        // Fetch products by category
         builder
             .addCase(fetchProductsByCategory.pending, (state) => {
                 state.loading = true;
@@ -136,7 +132,6 @@ const productsSlice = createSlice({
                 state.error = action.payload;
             });
 
-        // Create product
         builder
             .addCase(createProduct.pending, (state) => {
                 state.loading = true;
@@ -151,7 +146,6 @@ const productsSlice = createSlice({
                 state.error = action.payload;
             });
 
-        // Update product
         builder
             .addCase(updateProduct.pending, (state) => {
                 state.loading = true;
@@ -169,7 +163,6 @@ const productsSlice = createSlice({
                 state.error = action.payload;
             });
 
-        // Delete product
         builder
             .addCase(deleteProduct.pending, (state) => {
                 state.loading = true;
@@ -188,4 +181,3 @@ const productsSlice = createSlice({
 
 export const { clearError, clearCurrentProduct } = productsSlice.actions;
 export default productsSlice.reducer;
-

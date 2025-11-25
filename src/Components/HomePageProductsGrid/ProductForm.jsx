@@ -25,13 +25,11 @@ const DEFAULT_CATEGORIES = [
 
 const STORAGE_KEY = 'product_categories';
 
-// Load categories from localStorage
 const loadCategories = () => {
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             const parsed = JSON.parse(saved);
-            // Merge default categories with saved ones (remove duplicates)
             const merged = [...new Set([...DEFAULT_CATEGORIES, ...parsed])];
             return merged;
         }
@@ -41,10 +39,8 @@ const loadCategories = () => {
     return DEFAULT_CATEGORIES;
 };
 
-// Save categories to localStorage
 const saveCategories = (categories) => {
     try {
-        // Save only custom categories (not default ones)
         const customCategories = categories.filter(cat => !DEFAULT_CATEGORIES.includes(cat));
         localStorage.setItem(STORAGE_KEY, JSON.stringify(customCategories));
     } catch (error) {
@@ -61,7 +57,6 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
 
     useEffect(() => {
         if (initialValues) {
-            // Handle categoriesName - convert string to array if needed
             let categoriesValue = initialValues.categoriesName;
             if (typeof categoriesValue === 'string') {
                 categoriesValue = categoriesValue ? [categoriesValue] : [];
@@ -90,27 +85,23 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
     }, [initialValues, form]);
 
     const handleImageUpload = async (file) => {
-        // Validate file size (5MB = 5 * 1024 * 1024 bytes)
-        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        const maxSize = 5 * 1024 * 1024;
         if (file.size > maxSize) {
             message.error(`${file.name} exceeds 5MB limit. Please choose a smaller image.`);
             return false;
         }
 
-        // Validate file type
         const isImage = file.type.startsWith('image/');
         if (!isImage) {
             message.error(`${file.name} is not a valid image file.`);
             return false;
         }
 
-        // Check total image count
         if (imageList.length >= 5) {
             message.error('Maximum 5 images allowed. Please remove some images first.');
             return false;
         }
 
-        // Upload the file
         try {
             setUploading(true);
             const result = await uploadToCloudinary(file);
@@ -128,7 +119,7 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
             setUploading(false);
         }
 
-        return false; // Prevent default upload
+        return false;
     };
 
     const handleRemoveImage = (uid) => {
@@ -163,7 +154,6 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
                 className="form-modern"
                 requiredMark={false}
             >
-                {/* Product Information Section */}
                 <div className="form-section">
                     <h3 className="section-title">Product Information</h3>
                     
@@ -222,7 +212,6 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
                                                             const updatedCategories = [...categories, cat];
                                                             setCategories(updatedCategories);
                                                             saveCategories(updatedCategories);
-                                                            // Add new category to current selection
                                                             const currentSelection = form.getFieldValue('categoriesName') || [];
                                                             form.setFieldsValue({ categoriesName: [...currentSelection, cat] });
                                                             setNewCategory('');
@@ -267,7 +256,6 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
                     </Form.Item>
                 </div>
 
-                {/* Pricing & Inventory Section */}
                 <div className="form-section">
                     <h3 className="section-title">Pricing & Inventory</h3>
                     
@@ -317,7 +305,6 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
                     </Row>
                 </div>
 
-                {/* Product Images Section */}
                 <div className="form-section">
                     <h3 className="section-title">Product Images</h3>
                     <p className="section-description">Upload up to 5 images (Max 5MB per image)</p>
@@ -372,7 +359,6 @@ const ProductForm = ({ initialValues, onSubmit, onCancel, loading }) => {
                 </div>
             </Form>
 
-            {/* Form Actions */}
             <div className="form-actions-modern">
                 <Button 
                     size="large"

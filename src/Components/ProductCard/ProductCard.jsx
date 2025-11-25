@@ -9,21 +9,17 @@ const ProductCard = ({
 }) => {
     const placeholder = 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=No+Image';
 
-    // Primary image (first image or placeholder)
     const primaryImage = product.productImage && product.productImage.length > 0
         ? product.productImage[0]
         : placeholder;
 
-    // Secondary image for hover (second image, or first image if only one, or placeholder)
     const secondaryImage = product.productImage && product.productImage.length > 1
         ? product.productImage[1]
         : primaryImage;
 
-    // Check if there's a different hover image
     const hasHoverImage = primaryImage !== secondaryImage;
 
     const handleCardClick = (e) => {
-        // Don't trigger if clicking on action buttons
         if (e.target.closest('.product-card-actions')) {
             return;
         }
